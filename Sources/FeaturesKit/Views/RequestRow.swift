@@ -66,7 +66,7 @@ struct RequestRow: View {
                 .foregroundStyle(color)
                 .padding(.horizontal, 6)
                 .padding(.vertical, 2)
-                .background(color.opacity(0.12), in: Capsule())
+                .background(color.opacity(0.2), in: Capsule())
         }
     }
 
