@@ -13,10 +13,12 @@ final class FeaturesViewModel {
 
     let client: FeaturesClient
     let showSubmitButton: Bool
+    let showLimitDisplay: Bool
 
-    init(client: FeaturesClient, showSubmitButton: Bool) {
+    init(client: FeaturesClient, showSubmitButton: Bool, showLimitDisplay: Bool = false) {
         self.client = client
         self.showSubmitButton = showSubmitButton
+        self.showLimitDisplay = showLimitDisplay
     }
 
     var isAtLimit: Bool {

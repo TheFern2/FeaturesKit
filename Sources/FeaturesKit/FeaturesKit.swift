@@ -12,7 +12,8 @@ public struct FeaturesKit: View {
         userId: String? = nil,
         displayName: String? = nil,
         email: String? = nil,
-        showSubmitButton: Bool = true
+        showSubmitButton: Bool = true,
+        showLimitDisplay: Bool = false
     ) {
         let identity: UserIdentity?
         let needsSheet: Bool
@@ -38,7 +39,7 @@ public struct FeaturesKit: View {
             displayName: identity?.displayName,
             email: identity?.email
         )
-        _viewModel = State(initialValue: FeaturesViewModel(client: client, showSubmitButton: showSubmitButton))
+        _viewModel = State(initialValue: FeaturesViewModel(client: client, showSubmitButton: showSubmitButton, showLimitDisplay: showLimitDisplay))
         _showIdentitySheet = State(initialValue: needsSheet)
     }
 

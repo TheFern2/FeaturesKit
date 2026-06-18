@@ -10,7 +10,7 @@ struct RequestListView: View {
                 .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
 
-            if let limitDisplay = viewModel.limitDisplay {
+            if viewModel.showLimitDisplay, let limitDisplay = viewModel.limitDisplay {
                 Text(limitDisplay)
                     .font(.caption)
                     .foregroundStyle(viewModel.isAtLimit ? .orange : .secondary)
@@ -58,7 +58,7 @@ struct RequestListView: View {
             ToolbarItem(placement: .primaryAction) {
                 HStack(spacing: 12) {
                     sortMenu
-                    if viewModel.showSubmitButton {
+                    if viewModel.showSubmitButton && !viewModel.isAtLimit {
                         Button {
                             showSubmitSheet = true
                         } label: {
