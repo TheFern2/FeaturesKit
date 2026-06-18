@@ -30,7 +30,9 @@ struct RequestListView: View {
                 }
             } else {
                 ForEach(viewModel.filteredRequests) { request in
-                    NavigationLink(value: request.id) {
+                    NavigationLink {
+                        RequestDetailView(requestId: request.id, client: viewModel.client)
+                    } label: {
                         RequestRow(request: request) {
                             Task { await viewModel.vote(requestId: request.id) }
                         }
@@ -40,9 +42,6 @@ struct RequestListView: View {
         }
         .listStyle(.plain)
         .navigationTitle("Feature Requests")
-        .navigationDestination(for: String.self) { requestId in
-            RequestDetailView(requestId: requestId, client: viewModel.client)
-        }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 HStack(spacing: 12) {
