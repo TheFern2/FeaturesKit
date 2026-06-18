@@ -117,6 +117,12 @@ public final class FeaturesClient: Sendable {
         do {
             return try JSONDecoder.features.decode(T.self, from: data)
         } catch {
+            #if DEBUG
+            print("[FeaturesKit] Decoding \(T.self) failed: \(error)")
+            if let json = String(data: data, encoding: .utf8) {
+                print("[FeaturesKit] Raw response: \(json)")
+            }
+            #endif
             throw FeaturesError.decodingError
         }
     }
