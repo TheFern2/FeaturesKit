@@ -89,19 +89,28 @@ struct RequestListView: View {
                 viewModel.sort = .votes
                 Task { await viewModel.loadRequests() }
             } label: {
-                Label("Most Voted", systemImage: viewModel.sort == .votes ? "checkmark" : "")
+                HStack {
+                    Text("Most Voted")
+                    if viewModel.sort == .votes { Image(systemName: "checkmark") }
+                }
             }
             Button {
                 viewModel.sort = .newest
                 Task { await viewModel.loadRequests() }
             } label: {
-                Label("Newest", systemImage: viewModel.sort == .newest ? "checkmark" : "")
+                HStack {
+                    Text("Newest")
+                    if viewModel.sort == .newest { Image(systemName: "checkmark") }
+                }
             }
             Button {
                 viewModel.sort = .oldest
                 Task { await viewModel.loadRequests() }
             } label: {
-                Label("Oldest", systemImage: viewModel.sort == .oldest ? "checkmark" : "")
+                HStack {
+                    Text("Oldest")
+                    if viewModel.sort == .oldest { Image(systemName: "checkmark") }
+                }
             }
         } label: {
             Image(systemName: "arrow.up.arrow.down")
