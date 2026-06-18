@@ -132,7 +132,17 @@ extension JSONDecoder {
     static let features: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        let iso8601 = ISO8601DateFormatter()
+        iso8601.formatOptions = [.withInternetDateTime]
+        let iso8601Frac = ISO8601DateFormatter()
+        iso8601Frac.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        decoder.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let string = try container.decode(String.self)
+            if let date = iso8601Frac.date(from: string) { return date }
+            if let date = iso8601.date(from: string) { return date }
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date: \(string)")
+        }
         return decoder
     }()
 }
