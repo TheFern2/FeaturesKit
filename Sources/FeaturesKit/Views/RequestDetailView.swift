@@ -173,10 +173,14 @@ struct RequestDetailView: View {
         do {
             let result = try await client.getRequest(id: requestId)
             spinnerTask.cancel()
-            showSpinner = false
-            detail = result
-            voted = result.voted
-            voteCount = result.voteCount
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                showSpinner = false
+                detail = result
+                voted = result.voted
+                voteCount = result.voteCount
+            }
         } catch {
             spinnerTask.cancel()
             showSpinner = false
