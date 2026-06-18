@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SubmitRequestView: View {
+    let isAtLimit: Bool
     let onSubmit: (String, String?) async throws -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -32,6 +33,14 @@ struct SubmitRequestView: View {
                         Text("\(description.count)/\(descriptionLimit)")
                             .font(.caption2)
                             .foregroundStyle(description.count > descriptionLimit ? Color.red : Color.gray)
+                    }
+                }
+
+                if isAtLimit {
+                    Section {
+                        Label("This board has reached its request limit.", systemImage: "exclamationmark.triangle")
+                            .foregroundStyle(.orange)
+                            .font(.caption)
                     }
                 }
 
@@ -69,7 +78,8 @@ struct SubmitRequestView: View {
 
     private var canSubmit: Bool {
         let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
-        return !trimmed.isEmpty
+        return !isAtLimit
+            && !trimmed.isEmpty
             && trimmed.count <= titleLimit
             && description.count <= descriptionLimit
     }
@@ -90,5 +100,5 @@ struct SubmitRequestView: View {
 }
 
 #Preview {
-    SubmitRequestView { _, _ in }
+    SubmitRequestView(isAtLimit: false) { _, _ in }
 }

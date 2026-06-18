@@ -10,6 +10,16 @@ struct RequestListView: View {
                 .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
 
+            if let limitDisplay = viewModel.limitDisplay {
+                Text(limitDisplay)
+                    .font(.caption)
+                    .foregroundStyle(viewModel.isAtLimit ? .orange : .secondary)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.horizontal)
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+            }
+
             if viewModel.isOffline {
                 offlineBanner
             }
@@ -69,7 +79,7 @@ struct RequestListView: View {
             }
         }
         .sheet(isPresented: $showSubmitSheet) {
-            SubmitRequestView { title, description in
+            SubmitRequestView(isAtLimit: viewModel.isAtLimit) { title, description in
                 try await viewModel.submitRequest(title: title, description: description)
             }
         }

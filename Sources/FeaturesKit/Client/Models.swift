@@ -68,6 +68,23 @@ public struct Comment: Codable, Identifiable, Sendable {
     public let createdAt: Date
 }
 
+public struct RequestListResponse: Codable, Sendable {
+    public let requests: [FeatureRequest]
+    public let meta: RequestLimitMeta
+}
+
+public struct RequestLimitMeta: Codable, Sendable {
+    public let requestLimit: Int?
+    public let requestCount: Int?
+    public let limitRemaining: Int?
+}
+
+public struct RequestLimitInfo: Sendable {
+    public let requestLimit: Int
+    public let requestCount: Int
+    public let limitRemaining: Int
+}
+
 public struct VoteResult: Codable, Sendable {
     public let voted: Bool
 }
@@ -96,6 +113,7 @@ public enum SortOrder: String, Sendable {
 public enum FeaturesError: Error, LocalizedError, Sendable {
     case networkError(underlying: any Error)
     case apiError(status: Int, message: String)
+    case requestLimitReached(limit: RequestLimitInfo)
     case decodingError
 
     public var errorDescription: String? {
@@ -104,6 +122,8 @@ public enum FeaturesError: Error, LocalizedError, Sendable {
             return "Network error: \(underlying.localizedDescription)"
         case .apiError(_, let message):
             return message
+        case .requestLimitReached(let limit):
+            return "Request limit reached (\(limit.requestCount)/\(limit.requestLimit))"
         case .decodingError:
             return "Failed to decode response"
         }
@@ -130,4 +150,11 @@ extension FeatureRequest {
 
 struct APIErrorResponse: Codable {
     let error: String
+}
+
+struct RequestLimitErrorResponse: Codable {
+    let error: String
+    let requestLimit: Int
+    let requestCount: Int
+    let limitRemaining: Int
 }

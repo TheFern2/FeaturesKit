@@ -29,7 +29,7 @@ public final class FeaturesClient: @unchecked Sendable {
         status: RequestStatus? = nil,
         limit: Int = 50,
         offset: Int = 0
-    ) async throws -> [FeatureRequest] {
+    ) async throws -> RequestListResponse {
         var components = URLComponents(url: baseURL.appendingPathComponent("/api/v1/requests"), resolvingAgainstBaseURL: false)!
         var queryItems = [
             URLQueryItem(name: "sort", value: sort.rawValue),
@@ -127,6 +127,14 @@ public final class FeaturesClient: @unchecked Sendable {
         }
 
         guard (200...299).contains(http.statusCode) else {
+            if http.statusCode == 429,
+               let limitError = try? JSONDecoder.features.decode(RequestLimitErrorResponse.self, from: data) {
+                throw FeaturesError.requestLimitReached(limit: RequestLimitInfo(
+                    requestLimit: limitError.requestLimit,
+                    requestCount: limitError.requestCount,
+                    limitRemaining: limitError.limitRemaining
+                ))
+            }
             let message: String
             if let apiError = try? JSONDecoder().decode(APIErrorResponse.self, from: data) {
                 message = apiError.error

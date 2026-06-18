@@ -9,6 +9,7 @@ final class FeaturesViewModel {
     var isLoading = false
     var error: String?
     var isOffline = false
+    var limitInfo: RequestLimitInfo?
 
     let client: FeaturesClient
     let showSubmitButton: Bool
@@ -16,6 +17,15 @@ final class FeaturesViewModel {
     init(client: FeaturesClient, showSubmitButton: Bool) {
         self.client = client
         self.showSubmitButton = showSubmitButton
+    }
+
+    var isAtLimit: Bool {
+        limitInfo?.limitRemaining == 0
+    }
+
+    var limitDisplay: String? {
+        guard let info = limitInfo else { return nil }
+        return "\(info.requestCount) / \(info.requestLimit) requests"
     }
 
     var filteredRequests: [FeatureRequest] {
@@ -42,10 +52,11 @@ final class FeaturesViewModel {
         error = nil
         do {
             await replayPendingActions()
-            let result = try await client.listRequests(sort: sort)
-            requests = result
+            let response = try await client.listRequests(sort: sort)
+            requests = response.requests
+            updateLimitInfo(from: response.meta)
             isOffline = false
-            RequestCache.save(result)
+            RequestCache.save(response.requests)
         } catch {
             if let cached = RequestCache.load() {
                 requests = cached
@@ -90,8 +101,19 @@ final class FeaturesViewModel {
         do {
             let newRequest = try await client.createRequest(title: title, description: description)
             requests.insert(newRequest, at: 0)
+            if var info = limitInfo {
+                info = RequestLimitInfo(
+                    requestLimit: info.requestLimit,
+                    requestCount: info.requestCount + 1,
+                    limitRemaining: max(0, info.limitRemaining - 1)
+                )
+                limitInfo = info
+            }
         } catch {
-            if isNetworkError(error) {
+            if case FeaturesError.requestLimitReached(let info) = error {
+                limitInfo = info
+                throw error
+            } else if isNetworkError(error) {
                 PendingActionQueue.enqueue(.submit(title: title, description: description))
             } else {
                 throw error
@@ -126,6 +148,14 @@ final class FeaturesViewModel {
         } else {
             PendingActionQueue.save(remaining)
         }
+    }
+
+    private func updateLimitInfo(from meta: RequestLimitMeta) {
+        guard let limit = meta.requestLimit, let count = meta.requestCount, let remaining = meta.limitRemaining else {
+            limitInfo = nil
+            return
+        }
+        limitInfo = RequestLimitInfo(requestLimit: limit, requestCount: count, limitRemaining: remaining)
     }
 
     private func isNetworkError(_ error: Error) -> Bool {
