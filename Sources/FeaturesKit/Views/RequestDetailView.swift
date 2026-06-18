@@ -99,6 +99,7 @@ struct RequestDetailView: View {
                     .foregroundStyle(.tertiary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.vertical, 8)
+                    .listRowSeparator(.hidden)
             } else {
                 ForEach(comments) { comment in
                     CommentRow(comment: comment)
