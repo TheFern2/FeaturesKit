@@ -14,7 +14,14 @@ struct RequestDetailView: View {
     @State private var showCommentSheet = false
 
     var body: some View {
-        Group {
+        List {
+            if let detail {
+                detailSection(detail)
+                commentsSection(detail.comments)
+            }
+        }
+        .listStyle(.plain)
+        .overlay {
             if isLoading {
                 ProgressView()
             } else if let error {
@@ -27,8 +34,6 @@ struct RequestDetailView: View {
                         Task { await load() }
                     }
                 }
-            } else if let detail {
-                content(detail)
             }
         }
         .navigationTitle("Request")
@@ -48,14 +53,6 @@ struct RequestDetailView: View {
             addCommentSheet
         }
         .task { await load() }
-    }
-
-    private func content(_ detail: FeatureRequestDetail) -> some View {
-        List {
-            detailSection(detail)
-            commentsSection(detail.comments)
-        }
-        .listStyle(.plain)
     }
 
     private func detailSection(_ detail: FeatureRequestDetail) -> some View {
