@@ -14,9 +14,7 @@ public struct FeaturesKit: View {
     }
 
     public var body: some View {
-        NavigationStack {
-            RequestListView(viewModel: viewModel)
-        }
+        RequestListView(viewModel: viewModel)
     }
 }
 
