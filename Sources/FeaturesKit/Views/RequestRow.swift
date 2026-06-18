@@ -16,14 +16,14 @@ struct RequestRow: View {
                         .font(.subheadline.weight(.semibold))
                 }
                 .frame(width: 44, height: 50)
-                .foregroundStyle(request.voted ? Color.white : Color.accentColor)
+                .foregroundStyle(request.voted ? Color.white : Color.secondary)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(request.voted ? Color.accentColor : Color.accentColor.opacity(0.1))
+                        .fill(request.voted ? Color.accentColor : Color.secondary.opacity(0.1))
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
-                        .strokeBorder(Color.accentColor.opacity(request.voted ? 0 : 0.3))
+                        .strokeBorder(Color.secondary.opacity(request.voted ? 0 : 0.3))
                 )
             }
             .buttonStyle(.plain)

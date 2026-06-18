@@ -22,7 +22,7 @@ struct CommentRow: View {
         .padding(.horizontal, comment.isDeveloper ? 8 : 0)
         .background(
             comment.isDeveloper
-                ? Color.accentColor.opacity(0.06)
+                ? Color.accentColor.opacity(0.15)
                 : Color.clear,
             in: RoundedRectangle(cornerRadius: 8)
         )
