@@ -66,6 +66,8 @@ extension Comment {
             body: "Would love this for OLED screens",
             deviceId: "device-abc",
             userId: nil,
+            displayName: "Alex",
+            email: nil,
             isDeveloper: false,
             createdAt: Date(timeIntervalSinceNow: -86400 * 2)
         ),
@@ -74,6 +76,8 @@ extension Comment {
             body: "Good idea, adding to the backlog",
             deviceId: "device-dev",
             userId: "admin",
+            displayName: nil,
+            email: nil,
             isDeveloper: true,
             createdAt: Date(timeIntervalSinceNow: -86400)
         ),
@@ -82,6 +86,8 @@ extension Comment {
             body: "+1, dark mode is a must for late night usage",
             deviceId: "device-xyz",
             userId: nil,
+            displayName: "Jordan",
+            email: "jordan@example.com",
             isDeveloper: false,
             createdAt: Date(timeIntervalSinceNow: -3600)
         ),
@@ -100,6 +106,8 @@ extension FeatureRequestDetail {
         voted: false,
         deviceId: "device-abc",
         userId: nil,
+        displayName: "Alex",
+        email: nil,
         createdAt: Date(timeIntervalSinceNow: -86400 * 3),
         updatedAt: Date(timeIntervalSinceNow: -86400),
         comments: Comment.previewList

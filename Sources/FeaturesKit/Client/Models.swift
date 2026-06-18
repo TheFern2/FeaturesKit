@@ -50,6 +50,8 @@ public struct FeatureRequestDetail: Codable, Identifiable, Sendable {
     public let voted: Bool
     public let deviceId: String
     public let userId: String?
+    public let displayName: String?
+    public let email: String?
     public let createdAt: Date
     public let updatedAt: Date
     public let comments: [Comment]
@@ -60,6 +62,8 @@ public struct Comment: Codable, Identifiable, Sendable {
     public let body: String
     public let deviceId: String
     public let userId: String?
+    public let displayName: String?
+    public let email: String?
     public let isDeveloper: Bool
     public let createdAt: Date
 }

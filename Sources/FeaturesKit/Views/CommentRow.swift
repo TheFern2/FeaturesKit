@@ -32,6 +32,9 @@ struct CommentRow: View {
         if comment.isDeveloper {
             return "Developer"
         }
+        if let name = comment.displayName, !name.isEmpty {
+            return name
+        }
         let id = comment.deviceId
         if id.count > 8 {
             return String(id.prefix(8)) + "..."

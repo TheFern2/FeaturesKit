@@ -63,6 +63,13 @@ struct RequestDetailView: View {
                 Text(detail.title)
                     .font(.title3.weight(.semibold))
 
+                HStack(spacing: 6) {
+                    Image(systemName: "person.circle")
+                    Text(submitterLabel(detail))
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
                 if let description = detail.description, !description.isEmpty {
                     Text(description)
                         .font(.body)
@@ -143,6 +150,17 @@ struct RequestDetailView: View {
             }
         }
         .presentationDetents([.medium])
+    }
+
+    private func submitterLabel(_ detail: FeatureRequestDetail) -> String {
+        if let name = detail.displayName, !name.isEmpty {
+            return name
+        }
+        let id = detail.deviceId
+        if id.count > 8 {
+            return String(id.prefix(8)) + "..."
+        }
+        return id
     }
 
     private func statusBadge(_ status: RequestStatus) -> some View {

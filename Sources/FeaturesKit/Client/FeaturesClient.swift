@@ -1,16 +1,25 @@
 import Foundation
 
-public final class FeaturesClient: Sendable {
+public final class FeaturesClient: @unchecked Sendable {
     private let apiKey: String
     private let baseURL: URL
     private let userId: String?
+    private var displayName: String?
+    private var email: String?
     private let session: URLSession
 
-    public init(apiKey: String, baseURL: String = "https://your-domain.com", userId: String? = nil) {
+    public init(apiKey: String, baseURL: String = "https://your-domain.com", userId: String? = nil, displayName: String? = nil, email: String? = nil) {
         self.apiKey = apiKey
         self.baseURL = URL(string: baseURL)!
         self.userId = userId
+        self.displayName = displayName
+        self.email = email
         self.session = .shared
+    }
+
+    func updateIdentity(displayName: String, email: String?) {
+        self.displayName = displayName
+        self.email = email
     }
 
     // MARK: - Requests
@@ -48,6 +57,12 @@ public final class FeaturesClient: Sendable {
         if let description {
             body["description"] = description
         }
+        if let displayName {
+            body["display_name"] = displayName
+        }
+        if let email {
+            body["email"] = email
+        }
         let request = makeRequest(url: url, method: "POST", body: body)
         return try await perform(request)
     }
@@ -70,7 +85,14 @@ public final class FeaturesClient: Sendable {
 
     public func addComment(requestId: String, body: String) async throws -> Comment {
         let url = baseURL.appendingPathComponent("/api/v1/requests/\(requestId)/comments")
-        let request = makeRequest(url: url, method: "POST", body: ["body": body])
+        var payload: [String: String] = ["body": body]
+        if let displayName {
+            payload["display_name"] = displayName
+        }
+        if let email {
+            payload["email"] = email
+        }
+        let request = makeRequest(url: url, method: "POST", body: payload)
         return try await perform(request)
     }
 
@@ -132,15 +154,15 @@ extension JSONDecoder {
     static let features: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let iso8601 = ISO8601DateFormatter()
-        iso8601.formatOptions = [.withInternetDateTime]
-        let iso8601Frac = ISO8601DateFormatter()
-        iso8601Frac.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         decoder.dateDecodingStrategy = .custom { decoder in
             let container = try decoder.singleValueContainer()
             let string = try container.decode(String.self)
-            if let date = iso8601Frac.date(from: string) { return date }
-            if let date = iso8601.date(from: string) { return date }
+            let frac = ISO8601DateFormatter()
+            frac.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            if let date = frac.date(from: string) { return date }
+            let plain = ISO8601DateFormatter()
+            plain.formatOptions = [.withInternetDateTime]
+            if let date = plain.date(from: string) { return date }
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date: \(string)")
         }
         return decoder
