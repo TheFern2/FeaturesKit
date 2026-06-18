@@ -11,6 +11,7 @@ struct RequestDetailView: View {
     @State private var error: String?
     @State private var commentText = ""
     @State private var isSendingComment = false
+    @State private var showCommentSheet = false
 
     var body: some View {
         Group {
@@ -38,15 +39,22 @@ struct RequestDetailView: View {
     }
 
     private func content(_ detail: FeatureRequestDetail) -> some View {
-        ScrollViewReader { proxy in
-            List {
-                detailSection(detail)
-                commentsSection(detail.comments)
+        List {
+            detailSection(detail)
+            commentsSection(detail.comments)
+        }
+        .listStyle(.plain)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showCommentSheet = true
+                } label: {
+                    Image(systemName: "plus")
+                }
             }
-            .listStyle(.plain)
-            .safeAreaInset(edge: .bottom) {
-                commentInput(proxy: proxy)
-            }
+        }
+        .sheet(isPresented: $showCommentSheet) {
+            addCommentSheet
         }
     }
 
@@ -104,27 +112,37 @@ struct RequestDetailView: View {
         .id("comments-bottom")
     }
 
-    private func commentInput(proxy: ScrollViewProxy) -> some View {
-        HStack(spacing: 8) {
-            TextField("Add a comment...", text: $commentText, axis: .vertical)
-                .textFieldStyle(.roundedBorder)
-                .lineLimit(1...4)
-
-            Button {
-                Task { await sendComment(proxy: proxy) }
-            } label: {
-                if isSendingComment {
-                    ProgressView()
-                        .controlSize(.small)
-                } else {
-                    Image(systemName: "paperplane.fill")
+    private var addCommentSheet: some View {
+        NavigationStack {
+            Form {
+                Section("Comment") {
+                    TextField("Write a comment...", text: $commentText, axis: .vertical)
+                        .lineLimit(3...8)
                 }
             }
-            .disabled(commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isSendingComment)
+            .navigationTitle("Add Comment")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        commentText = ""
+                        showCommentSheet = false
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    if isSendingComment {
+                        ProgressView()
+                            .controlSize(.small)
+                    } else {
+                        Button("Post") {
+                            Task { await sendComment() }
+                        }
+                        .disabled(commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    }
+                }
+            }
         }
-        .padding(.horizontal)
-        .padding(.vertical, 8)
-        .background(.bar)
+        .presentationDetents([.medium])
     }
 
     private func statusBadge(_ status: RequestStatus) -> some View {
@@ -181,7 +199,7 @@ struct RequestDetailView: View {
         }
     }
 
-    private func sendComment(proxy: ScrollViewProxy) async {
+    private func sendComment() async {
         let body = commentText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !body.isEmpty else { return }
 
@@ -189,10 +207,8 @@ struct RequestDetailView: View {
         do {
             _ = try await client.addComment(requestId: requestId, body: body)
             commentText = ""
+            showCommentSheet = false
             await load()
-            withAnimation {
-                proxy.scrollTo("comments-bottom", anchor: .bottom)
-            }
         } catch {
             // Comment failed silently for now; the text stays so user can retry
         }
