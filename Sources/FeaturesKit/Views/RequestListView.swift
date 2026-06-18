@@ -6,6 +6,10 @@ struct RequestListView: View {
 
     var body: some View {
         List {
+            filterPicker
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
+
             if viewModel.isOffline {
                 offlineBanner
             }
@@ -53,9 +57,8 @@ struct RequestListView: View {
                 }
             }
         }
-        .safeAreaInset(edge: .top) {
-            filterPicker
-        }
+        .listSectionSeparator(.hidden, edges: .top)
+
         .refreshable {
             await viewModel.loadRequests()
         }
