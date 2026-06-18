@@ -57,6 +57,11 @@ final class FeaturesViewModel {
         isLoading = false
     }
 
+    func updateVote(requestId: String, voted: Bool, count: Int) {
+        guard let index = requests.firstIndex(where: { $0.id == requestId }) else { return }
+        requests[index] = requests[index].withVote(voted, count: count)
+    }
+
     func vote(requestId: String) async {
         guard let index = requests.firstIndex(where: { $0.id == requestId }) else { return }
         let original = requests[index]

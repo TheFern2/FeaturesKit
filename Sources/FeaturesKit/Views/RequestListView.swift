@@ -31,10 +31,9 @@ struct RequestListView: View {
             } else {
                 ForEach(viewModel.filteredRequests) { request in
                     NavigationLink {
-                        RequestDetailView(requestId: request.id, client: viewModel.client)
-                            .onDisappear {
-                                Task { await viewModel.loadRequests() }
-                            }
+                        RequestDetailView(requestId: request.id, client: viewModel.client) { voted, count in
+                            viewModel.updateVote(requestId: request.id, voted: voted, count: count)
+                        }
                     } label: {
                         RequestRow(request: request) {
                             Task { await viewModel.vote(requestId: request.id) }

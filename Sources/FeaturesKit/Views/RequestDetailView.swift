@@ -3,6 +3,7 @@ import SwiftUI
 struct RequestDetailView: View {
     let requestId: String
     let client: FeaturesClient
+    var onVoteChanged: ((Bool, Int) -> Void)?
 
     @State private var detail: FeatureRequestDetail?
     @State private var voted = false
@@ -193,6 +194,7 @@ struct RequestDetailView: View {
         let wasVoted = voted
         voted.toggle()
         voteCount += voted ? 1 : -1
+        onVoteChanged?(voted, voteCount)
 
         Task {
             do {
@@ -204,6 +206,7 @@ struct RequestDetailView: View {
             } catch {
                 voted = wasVoted
                 voteCount += wasVoted ? 1 : -1
+                onVoteChanged?(voted, voteCount)
             }
         }
     }
