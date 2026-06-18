@@ -35,15 +35,6 @@ struct RequestDetailView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
-        .task { await load() }
-    }
-
-    private func content(_ detail: FeatureRequestDetail) -> some View {
-        List {
-            detailSection(detail)
-            commentsSection(detail.comments)
-        }
-        .listStyle(.plain)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -56,6 +47,15 @@ struct RequestDetailView: View {
         .sheet(isPresented: $showCommentSheet) {
             addCommentSheet
         }
+        .task { await load() }
+    }
+
+    private func content(_ detail: FeatureRequestDetail) -> some View {
+        List {
+            detailSection(detail)
+            commentsSection(detail.comments)
+        }
+        .listStyle(.plain)
     }
 
     private func detailSection(_ detail: FeatureRequestDetail) -> some View {
