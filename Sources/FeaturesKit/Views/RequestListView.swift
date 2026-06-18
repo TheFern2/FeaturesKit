@@ -32,7 +32,6 @@ struct RequestListView: View {
                 ForEach(viewModel.filteredRequests) { request in
                     NavigationLink {
                         RequestDetailView(requestId: request.id, client: viewModel.client)
-                            .transaction { $0.animation = nil }
                     } label: {
                         RequestRow(request: request) {
                             Task { await viewModel.vote(requestId: request.id) }

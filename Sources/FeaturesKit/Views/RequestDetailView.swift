@@ -7,7 +7,8 @@ struct RequestDetailView: View {
     @State private var detail: FeatureRequestDetail?
     @State private var voted = false
     @State private var voteCount = 0
-    @State private var isLoading = true
+    @State private var isLoading = false
+    @State private var showSpinner = false
     @State private var error: String?
     @State private var commentText = ""
     @State private var isSendingComment = false
@@ -22,7 +23,7 @@ struct RequestDetailView: View {
         }
         .listStyle(.plain)
         .overlay {
-            if isLoading {
+            if showSpinner && detail == nil {
                 ProgressView()
             } else if let error {
                 ContentUnavailableView {
@@ -164,17 +165,23 @@ struct RequestDetailView: View {
     }
 
     private func load() async {
-        isLoading = true
         error = nil
+        let spinnerTask = Task {
+            try? await Task.sleep(for: .milliseconds(300))
+            if !Task.isCancelled { showSpinner = true }
+        }
         do {
             let result = try await client.getRequest(id: requestId)
+            spinnerTask.cancel()
+            showSpinner = false
             detail = result
             voted = result.voted
             voteCount = result.voteCount
         } catch {
+            spinnerTask.cancel()
+            showSpinner = false
             self.error = error.localizedDescription
         }
-        isLoading = false
     }
 
     private func toggleVote() {
