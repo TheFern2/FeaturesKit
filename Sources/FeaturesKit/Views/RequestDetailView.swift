@@ -43,11 +43,13 @@ struct RequestDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         #endif
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    showCommentSheet = true
-                } label: {
-                    Image(systemName: "plus")
+            if detail?.commentsLocked != true {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showCommentSheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
                 }
             }
         }
@@ -102,12 +104,22 @@ struct RequestDetailView: View {
     @ViewBuilder
     private func commentsSection(_ comments: [Comment]) -> some View {
         Section {
-            if comments.isEmpty {
-                Text("No comments yet")
-                    .foregroundStyle(.tertiary)
+            if detail?.commentsLocked == true {
+                Label("Comments are locked", systemImage: "lock.fill")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, 8)
+                    .padding(.vertical, 4)
                     .listRowSeparator(.hidden)
+            }
+            if comments.isEmpty {
+                if detail?.commentsLocked != true {
+                    Text("No comments yet")
+                        .foregroundStyle(.tertiary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.vertical, 8)
+                        .listRowSeparator(.hidden)
+                }
             } else {
                 ForEach(comments) { comment in
                     CommentRow(comment: comment)

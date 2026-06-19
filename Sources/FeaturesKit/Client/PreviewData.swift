@@ -103,6 +103,7 @@ extension FeatureRequestDetail {
         visibility: .approved,
         voteCount: 24,
         commentCount: 3,
+        commentsLocked: false,
         voted: false,
         deviceId: "device-abc",
         userId: nil,

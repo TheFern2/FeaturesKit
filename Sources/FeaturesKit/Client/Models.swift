@@ -47,6 +47,7 @@ public struct FeatureRequestDetail: Codable, Identifiable, Sendable {
     public let visibility: RequestVisibility
     public let voteCount: Int
     public let commentCount: Int
+    public let commentsLocked: Bool
     public let voted: Bool
     public let deviceId: String
     public let userId: String?
