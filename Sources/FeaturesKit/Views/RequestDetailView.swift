@@ -104,6 +104,17 @@ struct RequestDetailView: View {
     @ViewBuilder
     private func commentsSection(_ comments: [Comment]) -> some View {
         Section {
+            if comments.isEmpty && detail?.commentsLocked != true {
+                Text("No comments yet")
+                    .foregroundStyle(.tertiary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 8)
+                    .listRowSeparator(.hidden)
+            } else {
+                ForEach(comments) { comment in
+                    CommentRow(comment: comment)
+                }
+            }
             if detail?.commentsLocked == true {
                 Label("Comments are locked", systemImage: "lock.fill")
                     .font(.caption)
@@ -111,19 +122,6 @@ struct RequestDetailView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.vertical, 4)
                     .listRowSeparator(.hidden)
-            }
-            if comments.isEmpty {
-                if detail?.commentsLocked != true {
-                    Text("No comments yet")
-                        .foregroundStyle(.tertiary)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.vertical, 8)
-                        .listRowSeparator(.hidden)
-                }
-            } else {
-                ForEach(comments) { comment in
-                    CommentRow(comment: comment)
-                }
             }
         } header: {
             Text("Comments (\(detail?.comments.count ?? 0))")
