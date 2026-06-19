@@ -27,6 +27,7 @@ struct RequestRow: View {
                 )
             }
             .buttonStyle(.plain)
+            .disabled(request.status.isTerminal)
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(request.title)
@@ -60,7 +61,7 @@ struct RequestRow: View {
     @ViewBuilder
     private var statusBadge: some View {
         let (label, color) = statusInfo(request.status)
-        if request.status != .new {
+        if request.status != .new && request.status != .done {
             Text(label)
                 .font(.caption2.weight(.medium))
                 .foregroundStyle(color)
@@ -77,6 +78,7 @@ struct RequestRow: View {
         case .planned: ("Planned", .blue)
         case .inProgress: ("In Progress", .purple)
         case .shipped: ("Shipped", .green)
+        case .done: ("Done", .green)
         case .declined: ("Declined", .red)
         }
     }

@@ -96,7 +96,12 @@ public enum RequestStatus: String, Codable, CaseIterable, Sendable {
     case planned
     case inProgress = "in_progress"
     case shipped
+    case done
     case declined
+
+    public var isTerminal: Bool {
+        self == .shipped || self == .done || self == .declined
+    }
 }
 
 public enum RequestVisibility: String, Codable, Sendable {

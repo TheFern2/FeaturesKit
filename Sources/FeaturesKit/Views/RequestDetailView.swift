@@ -91,6 +91,7 @@ struct RequestDetailView: View {
                         .foregroundStyle(voted ? Color.accentColor : Color.secondary)
                     }
                     .buttonStyle(.plain)
+                    .disabled(detail.status.isTerminal)
 
                     Spacer()
 
@@ -190,6 +191,7 @@ struct RequestDetailView: View {
         case .planned: ("Planned", .blue)
         case .inProgress: ("In Progress", .purple)
         case .shipped: ("Shipped", .green)
+        case .done: ("Done", .green)
         case .declined: ("Declined", .red)
         }
     }
