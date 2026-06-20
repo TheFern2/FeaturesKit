@@ -30,7 +30,7 @@ struct RequestDetailView: View {
         .listStyle(.plain)
         .listRowSeparator(.hidden)
         .scrollContentBackground(theme.backgroundColor != nil ? .hidden : .automatic)
-        .background(theme.backgroundColor ?? Color.clear)
+        .background((theme.backgroundColor ?? Color.clear).ignoresSafeArea())
         .overlay {
             if showSpinner && detail == nil {
                 ProgressView()
@@ -247,12 +247,12 @@ struct RequestDetailView: View {
         isSendingComment = true
         do {
             _ = try await client.addComment(requestId: requestId, body: body)
-            isSendingComment = false
             commentText = ""
             showCommentSheet = false
             await load()
         } catch {
-            isSendingComment = false
+            // Comment failed silently for now; the text stays so user can retry
         }
+        isSendingComment = false
     }
 }

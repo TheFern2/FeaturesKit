@@ -64,7 +64,7 @@ struct RequestListView: View {
         .listStyle(.plain)
         .listRowSeparator(.hidden)
         .scrollContentBackground(theme.backgroundColor != nil ? .hidden : .automatic)
-        .background(theme.backgroundColor ?? Color.clear)
+        .background((theme.backgroundColor ?? Color.clear).ignoresSafeArea())
         .navigationTitle("Feature Requests")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
