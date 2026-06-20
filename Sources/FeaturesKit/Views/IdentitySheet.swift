@@ -35,8 +35,10 @@ struct IdentitySheet: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Continue") {
+                        let trimmedName = displayName.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let suffix = String(DeviceID.current.suffix(5))
                         let identity = UserIdentity(
-                            displayName: displayName.trimmingCharacters(in: .whitespacesAndNewlines),
+                            displayName: "\(trimmedName)_\(suffix)",
                             email: email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                                 ? nil
                                 : email.trimmingCharacters(in: .whitespacesAndNewlines)
