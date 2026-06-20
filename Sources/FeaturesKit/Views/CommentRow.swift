@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CommentRow: View {
+    @Environment(\.featuresTheme) private var theme
     let comment: Comment
 
     var body: some View {
@@ -8,7 +9,7 @@ struct CommentRow: View {
             HStack {
                 Text(authorLabel)
                     .font(.caption.weight(.medium))
-                    .foregroundStyle(comment.isDeveloper ? Color.accentColor : Color.secondary)
+                    .foregroundStyle(comment.isDeveloper ? theme.accent : Color.secondary)
                 Spacer()
                 Text(comment.createdAt, style: .date)
                     .font(.caption2)
@@ -22,7 +23,7 @@ struct CommentRow: View {
         .padding(.horizontal, comment.isDeveloper ? 8 : 0)
         .background(
             comment.isDeveloper
-                ? Color.accentColor.opacity(0.15)
+                ? theme.accent.opacity(0.15)
                 : Color.clear,
             in: RoundedRectangle(cornerRadius: 8)
         )

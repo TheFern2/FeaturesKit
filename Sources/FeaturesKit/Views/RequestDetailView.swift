@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RequestDetailView: View {
+    @Environment(\.featuresTheme) private var theme
     let requestId: String
     let client: FeaturesClient
     var onVoteChanged: ((Bool, Int) -> Void)?
@@ -22,7 +23,7 @@ struct RequestDetailView: View {
                 commentsSection(detail.comments)
             }
         }
-        .listStyle(.plain)
+        .listStyle(.automatic)
         .overlay {
             if showSpinner && detail == nil {
                 ProgressView()
@@ -88,7 +89,7 @@ struct RequestDetailView: View {
                             Text("\(voteCount) votes")
                                 .font(.subheadline.weight(.medium))
                         }
-                        .foregroundStyle(voted ? Color.accentColor : Color.secondary)
+                        .foregroundStyle(voted ? theme.accent : Color.secondary)
                     }
                     .buttonStyle(.plain)
                     .disabled(detail.status.isTerminal)
@@ -175,25 +176,13 @@ struct RequestDetailView: View {
     }
 
     private func statusBadge(_ status: RequestStatus) -> some View {
-        let (label, color) = statusInfo(status)
-        return Text(label)
+        let color = theme.statusColor(status)
+        return Text(status.label)
             .font(.caption.weight(.medium))
             .foregroundStyle(color)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .background(color.opacity(0.2), in: Capsule())
-    }
-
-    private func statusInfo(_ status: RequestStatus) -> (String, Color) {
-        switch status {
-        case .new: ("New", .secondary)
-        case .underReview: ("Under Review", .orange)
-        case .planned: ("Planned", .blue)
-        case .inProgress: ("In Progress", .purple)
-        case .shipped: ("Shipped", .green)
-        case .done: ("Done", .green)
-        case .declined: ("Declined", .red)
-        }
     }
 
     private func load() async {

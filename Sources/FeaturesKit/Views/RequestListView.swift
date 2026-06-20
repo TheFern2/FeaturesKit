@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RequestListView: View {
+    @Environment(\.featuresTheme) private var theme
     @Bindable var viewModel: FeaturesViewModel
     @State private var showSubmitSheet = false
 
@@ -52,7 +53,7 @@ struct RequestListView: View {
                 }
             }
         }
-        .listStyle(.plain)
+        .listStyle(.automatic)
         .navigationTitle("Feature Requests")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -94,7 +95,6 @@ struct RequestListView: View {
         .pickerStyle(.segmented)
         .padding(.horizontal)
         .padding(.vertical, 8)
-        .background(.bar)
     }
 
     private var sortMenu: some View {

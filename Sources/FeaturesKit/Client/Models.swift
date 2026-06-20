@@ -102,6 +102,18 @@ public enum RequestStatus: String, Codable, CaseIterable, Sendable {
     public var isTerminal: Bool {
         self == .shipped || self == .done || self == .declined
     }
+
+    public var label: String {
+        switch self {
+        case .new: "New"
+        case .underReview: "Under Review"
+        case .planned: "Planned"
+        case .inProgress: "In Progress"
+        case .shipped: "Shipped"
+        case .done: "Done"
+        case .declined: "Declined"
+        }
+    }
 }
 
 public enum RequestVisibility: String, Codable, Sendable {

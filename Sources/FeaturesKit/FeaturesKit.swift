@@ -5,6 +5,7 @@ public struct FeaturesKit: View {
     @State private var showIdentitySheet: Bool
 
     private let appManagedIdentity: Bool
+    private let theme: FeaturesTheme
 
     public init(
         _ apiKey: String,
@@ -13,8 +14,10 @@ public struct FeaturesKit: View {
         displayName: String? = nil,
         email: String? = nil,
         showSubmitButton: Bool = true,
-        showLimitDisplay: Bool = false
+        showLimitDisplay: Bool = false,
+        theme: FeaturesTheme = FeaturesTheme()
     ) {
+        self.theme = theme
         let identity: UserIdentity?
         let needsSheet: Bool
 
@@ -45,6 +48,7 @@ public struct FeaturesKit: View {
 
     public var body: some View {
         RequestListView(viewModel: viewModel)
+            .environment(\.featuresTheme, theme)
             .sheet(isPresented: $showIdentitySheet) {
                 IdentitySheet { identity in
                     viewModel.client.updateIdentity(displayName: identity.displayName, email: identity.email)

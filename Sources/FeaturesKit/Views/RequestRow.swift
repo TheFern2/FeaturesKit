@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RequestRow: View {
+    @Environment(\.featuresTheme) private var theme
     let request: FeatureRequest
     let onVote: () -> Void
 
@@ -19,7 +20,7 @@ struct RequestRow: View {
                 .foregroundStyle(request.voted ? Color.white : Color.secondary)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(request.voted ? Color.accentColor : Color.secondary.opacity(0.1))
+                        .fill(request.voted ? theme.accent : Color.secondary.opacity(0.1))
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
@@ -60,26 +61,14 @@ struct RequestRow: View {
 
     @ViewBuilder
     private var statusBadge: some View {
-        let (label, color) = statusInfo(request.status)
+        let color = theme.statusColor(request.status)
         if request.status != .new && request.status != .done {
-            Text(label)
+            Text(request.status.label)
                 .font(.caption2.weight(.medium))
                 .foregroundStyle(color)
                 .padding(.horizontal, 6)
                 .padding(.vertical, 2)
                 .background(color.opacity(0.2), in: Capsule())
-        }
-    }
-
-    private func statusInfo(_ status: RequestStatus) -> (String, Color) {
-        switch status {
-        case .new: ("New", .secondary)
-        case .underReview: ("Under Review", .orange)
-        case .planned: ("Planned", .blue)
-        case .inProgress: ("In Progress", .purple)
-        case .shipped: ("Shipped", .green)
-        case .done: ("Done", .green)
-        case .declined: ("Declined", .red)
         }
     }
 }
