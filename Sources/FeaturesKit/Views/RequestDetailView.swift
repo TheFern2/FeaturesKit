@@ -51,7 +51,7 @@ struct RequestDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         #endif
         .toolbar {
-            if detail?.commentsLocked != true {
+            if detail?.commentsLocked != true && detail?.visibility == .approved {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
                         showCommentSheet = true
