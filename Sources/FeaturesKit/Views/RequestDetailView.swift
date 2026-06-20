@@ -125,7 +125,14 @@ struct RequestDetailView: View {
                     CommentRow(comment: comment)
                 }
             }
-            if detail?.commentsLocked == true {
+            if detail?.visibility == .pending {
+                Label("Awaiting approval", systemImage: "clock")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 4)
+                    .listRowSeparator(.hidden)
+            } else if detail?.commentsLocked == true {
                 Label("Comments are locked", systemImage: "lock.fill")
                     .font(.caption)
                     .foregroundStyle(.secondary)
