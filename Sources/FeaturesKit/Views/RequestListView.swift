@@ -50,10 +50,13 @@ struct RequestListView: View {
                             Task { await viewModel.vote(requestId: request.id) }
                         }
                     }
+                    .listRowBackground(theme.rowBackgroundColor)
                 }
             }
         }
-        .listStyle(.automatic)
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(theme.backgroundColor ?? Color(.systemBackground))
         .navigationTitle("Feature Requests")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -95,6 +98,7 @@ struct RequestListView: View {
         .pickerStyle(.segmented)
         .padding(.horizontal)
         .padding(.vertical, 8)
+        .background(theme.segmentedControlColor ?? Color.clear)
     }
 
     private var sortMenu: some View {

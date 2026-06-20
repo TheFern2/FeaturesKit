@@ -23,7 +23,9 @@ struct RequestDetailView: View {
                 commentsSection(detail.comments)
             }
         }
-        .listStyle(.automatic)
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(theme.backgroundColor ?? Color(.systemBackground))
         .overlay {
             if showSpinner && detail == nil {
                 ProgressView()

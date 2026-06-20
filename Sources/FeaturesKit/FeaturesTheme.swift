@@ -2,6 +2,9 @@ import SwiftUI
 
 public struct FeaturesTheme: Sendable {
     public var accent: Color
+    public var backgroundColor: Color?
+    public var rowBackgroundColor: Color?
+    public var segmentedControlColor: Color?
     public var statusNew: Color
     public var statusUnderReview: Color
     public var statusPlanned: Color
@@ -12,6 +15,9 @@ public struct FeaturesTheme: Sendable {
 
     public init(
         accent: Color = .accentColor,
+        backgroundColor: Color? = nil,
+        rowBackgroundColor: Color? = nil,
+        segmentedControlColor: Color? = nil,
         statusNew: Color = .secondary,
         statusUnderReview: Color = .orange,
         statusPlanned: Color = .blue,
@@ -21,6 +27,9 @@ public struct FeaturesTheme: Sendable {
         statusDeclined: Color = .red
     ) {
         self.accent = accent
+        self.backgroundColor = backgroundColor
+        self.rowBackgroundColor = rowBackgroundColor
+        self.segmentedControlColor = segmentedControlColor
         self.statusNew = statusNew
         self.statusUnderReview = statusUnderReview
         self.statusPlanned = statusPlanned
