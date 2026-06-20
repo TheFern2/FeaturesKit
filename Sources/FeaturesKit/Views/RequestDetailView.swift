@@ -246,12 +246,12 @@ struct RequestDetailView: View {
         isSendingComment = true
         do {
             _ = try await client.addComment(requestId: requestId, body: body)
+            isSendingComment = false
             commentText = ""
             showCommentSheet = false
             await load()
         } catch {
-            // Comment failed silently for now; the text stays so user can retry
+            isSendingComment = false
         }
-        isSendingComment = false
     }
 }
