@@ -51,6 +51,7 @@ struct RequestListView: View {
                         RequestDetailView(requestId: request.id, client: viewModel.client) { voted, count in
                             viewModel.updateVote(requestId: request.id, voted: voted, count: count)
                         }
+                        .environment(\.featuresTheme, theme)
                     } label: {
                         RequestRow(request: request) {
                             Task { await viewModel.vote(requestId: request.id) }
