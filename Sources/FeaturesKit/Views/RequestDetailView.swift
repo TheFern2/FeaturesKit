@@ -21,8 +21,10 @@ struct RequestDetailView: View {
             if let detail {
                 detailSection(detail)
                     .listRowBackground(theme.rowBackgroundColor)
+                    .listRowSeparator(.hidden)
                 commentsSection(detail.comments)
                     .listRowBackground(theme.rowBackgroundColor)
+                    .listRowSeparator(.hidden)
             }
         }
         .listStyle(.plain)

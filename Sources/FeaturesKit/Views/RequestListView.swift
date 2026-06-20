@@ -38,11 +38,13 @@ struct RequestListView: View {
                     }
                 }
                 .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
             } else if viewModel.filteredRequests.isEmpty && !viewModel.isLoading {
                 ContentUnavailableView {
                     Label(viewModel.emptyMessage, systemImage: "lightbulb")
                 }
                 .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
             } else {
                 ForEach(viewModel.filteredRequests) { request in
                     NavigationLink {
@@ -55,6 +57,7 @@ struct RequestListView: View {
                         }
                     }
                     .listRowBackground(theme.rowBackgroundColor)
+                    .listRowSeparator(.hidden)
                 }
             }
         }
