@@ -10,6 +10,7 @@ struct RequestListView: View {
             filterPicker
                 .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
 
             if viewModel.showLimitDisplay, let limitDisplay = viewModel.limitDisplay {
                 Text(limitDisplay)
@@ -19,6 +20,7 @@ struct RequestListView: View {
                     .padding(.horizontal)
                     .listRowInsets(EdgeInsets())
                     .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
             }
 
             if viewModel.isOffline {
@@ -35,10 +37,12 @@ struct RequestListView: View {
                         Task { await viewModel.loadRequests() }
                     }
                 }
+                .listRowBackground(Color.clear)
             } else if viewModel.filteredRequests.isEmpty && !viewModel.isLoading {
                 ContentUnavailableView {
                     Label(viewModel.emptyMessage, systemImage: "lightbulb")
                 }
+                .listRowBackground(Color.clear)
             } else {
                 ForEach(viewModel.filteredRequests) { request in
                     NavigationLink {
@@ -55,6 +59,7 @@ struct RequestListView: View {
             }
         }
         .listStyle(.plain)
+        .listRowSeparator(.hidden)
         .scrollContentBackground(.hidden)
         .background(theme.backgroundColor ?? Color(.systemBackground))
         .navigationTitle("Feature Requests")
@@ -146,5 +151,6 @@ struct RequestListView: View {
         .padding(.vertical, 6)
         .listRowInsets(EdgeInsets())
         .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
     }
 }

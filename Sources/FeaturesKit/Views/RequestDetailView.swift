@@ -20,10 +20,13 @@ struct RequestDetailView: View {
         List {
             if let detail {
                 detailSection(detail)
+                    .listRowBackground(theme.rowBackgroundColor)
                 commentsSection(detail.comments)
+                    .listRowBackground(theme.rowBackgroundColor)
             }
         }
         .listStyle(.plain)
+        .listRowSeparator(.hidden)
         .scrollContentBackground(.hidden)
         .background(theme.backgroundColor ?? Color(.systemBackground))
         .overlay {
