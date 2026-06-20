@@ -54,6 +54,7 @@ public struct FeaturesKit: View {
                     viewModel.client.updateIdentity(displayName: identity.displayName, email: identity.email)
                     showIdentitySheet = false
                 }
+                .environment(\.featuresTheme, theme)
             }
     }
 }

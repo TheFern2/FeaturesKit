@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SubmitRequestView: View {
+    @Environment(\.featuresTheme) private var theme
     let isAtLimit: Bool
     let onSubmit: (String, String?) async throws -> Void
 
@@ -52,6 +53,8 @@ struct SubmitRequestView: View {
                     }
                 }
             }
+            .scrollContentBackground(theme.backgroundColor != nil ? .hidden : .automatic)
+            .background(theme.backgroundColor ?? Color.clear)
             .navigationTitle("New Request")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)

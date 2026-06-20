@@ -94,6 +94,7 @@ struct RequestListView: View {
             SubmitRequestView(isAtLimit: viewModel.isAtLimit) { title, description in
                 try await viewModel.submitRequest(title: title, description: description)
             }
+            .environment(\.featuresTheme, theme)
         }
     }
 

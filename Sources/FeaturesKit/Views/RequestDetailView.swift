@@ -63,6 +63,7 @@ struct RequestDetailView: View {
         }
         .sheet(isPresented: $showCommentSheet) {
             addCommentSheet
+                .environment(\.featuresTheme, theme)
         }
         .task { await load() }
     }
@@ -146,6 +147,8 @@ struct RequestDetailView: View {
                         .lineLimit(3...8)
                 }
             }
+            .scrollContentBackground(theme.backgroundColor != nil ? .hidden : .automatic)
+            .background(theme.backgroundColor ?? Color.clear)
             .navigationTitle("Add Comment")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -244,12 +247,12 @@ struct RequestDetailView: View {
         isSendingComment = true
         do {
             _ = try await client.addComment(requestId: requestId, body: body)
+            isSendingComment = false
             commentText = ""
             showCommentSheet = false
             await load()
         } catch {
-            // Comment failed silently for now; the text stays so user can retry
+            isSendingComment = false
         }
-        isSendingComment = false
     }
 }
