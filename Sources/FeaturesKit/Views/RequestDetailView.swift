@@ -241,16 +241,22 @@ struct RequestDetailView: View {
 
     private func sendComment() async {
         let body = commentText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !body.isEmpty else { return }
+        guard !body.isEmpty else {
+            print("[FeaturesKit] sendComment: body is empty, skipping")
+            return
+        }
 
+        print("[FeaturesKit] sendComment: sending comment for request \(requestId), body length: \(body.count)")
         isSendingComment = true
         do {
-            _ = try await client.addComment(requestId: requestId, body: body)
+            let comment = try await client.addComment(requestId: requestId, body: body)
+            print("[FeaturesKit] sendComment: success, comment id: \(comment.id)")
             isSendingComment = false
             commentText = ""
             showCommentSheet = false
             await load()
         } catch {
+            print("[FeaturesKit] sendComment: failed with error: \(error)")
             isSendingComment = false
         }
     }
