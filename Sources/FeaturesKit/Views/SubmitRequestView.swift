@@ -54,7 +54,7 @@ struct SubmitRequestView: View {
                 }
             }
             .scrollContentBackground(theme.backgroundColor != nil ? .hidden : .automatic)
-            .background(theme.backgroundColor ?? Color.clear)
+            .background((theme.backgroundColor ?? Color.clear).ignoresSafeArea())
             .navigationTitle("New Request")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)

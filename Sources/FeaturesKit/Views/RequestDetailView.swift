@@ -148,7 +148,7 @@ struct RequestDetailView: View {
                 }
             }
             .scrollContentBackground(theme.backgroundColor != nil ? .hidden : .automatic)
-            .background(theme.backgroundColor ?? Color.clear)
+            .background((theme.backgroundColor ?? Color.clear).ignoresSafeArea())
             .navigationTitle("Add Comment")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -171,7 +171,6 @@ struct RequestDetailView: View {
                 }
             }
         }
-        .presentationDetents([.medium])
     }
 
     private func submitterLabel(_ detail: FeatureRequestDetail) -> String {
