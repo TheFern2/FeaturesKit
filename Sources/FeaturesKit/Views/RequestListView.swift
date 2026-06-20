@@ -57,14 +57,13 @@ struct RequestListView: View {
                         }
                     }
                     .listRowBackground(theme.rowBackgroundColor)
-                    .listRowSeparator(.hidden)
                 }
             }
         }
         .listStyle(.plain)
         .listRowSeparator(.hidden)
-        .scrollContentBackground(.hidden)
-        .background(theme.backgroundColor ?? Color(.systemBackground))
+        .scrollContentBackground(theme.backgroundColor != nil ? .hidden : .automatic)
+        .background(theme.backgroundColor ?? Color.clear)
         .navigationTitle("Feature Requests")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {

@@ -29,8 +29,8 @@ struct RequestDetailView: View {
         }
         .listStyle(.plain)
         .listRowSeparator(.hidden)
-        .scrollContentBackground(.hidden)
-        .background(theme.backgroundColor ?? Color(.systemBackground))
+        .scrollContentBackground(theme.backgroundColor != nil ? .hidden : .automatic)
+        .background(theme.backgroundColor ?? Color.clear)
         .overlay {
             if showSpinner && detail == nil {
                 ProgressView()
